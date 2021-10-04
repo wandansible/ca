@@ -1,0 +1,22 @@
+---
+ownca_generate_cert: true
+ownca_trust_ca: true
+
+ownca_ssl_dir: /etc/ssl/ansible
+ownca_cert_file: "{{ ownca_ssl_dir }}/{{ inventory_hostname }}.cert"
+ownca_key_file: "{{ ownca_ssl_dir }}/{{ inventory_hostname }}.key"
+ownca_ca_filename: wand-ca
+
+ownca_key_type: ECC
+ownca_key_curve: secp256r1
+ownca_key_size: ""
+
+ownca_not_after: +1825d
+ownca_early_renewal: +365d
+
+ownca_common_name: "{{ inventory_hostname }}"
+ownca_san:
+  - DNS:{{ ownca_common_name }}
+
+ownca_ca_cert: ""
+ownca_ca_key: ""

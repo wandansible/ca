@@ -1,0 +1,27 @@
+---
+- name: Install required packages for CA role
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+  loop:
+    - ca-certificates
+    - python3-cryptography
+
+- name: Generate private key and host certificate
+  ansible.builtin.import_tasks: cert.yml
+  when: 
+    - ownca_generate_cert | bool
+    - ownca_ca_cert != ""
+    - ownca_ca_key != ""
+
+- name: Add CA cert to trusted CA cert store
+  ansible.builtin.copy:
+    content: "{{ ownca_ca_cert }}"
+    dest: /usr/local/share/ca-certificates/{{ ownca_ca_filename }}.crt
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
+  notify: update-ca-certificates
+  when: 
+    - ownca_trust_ca | bool
+    - ownca_ca_cert != ""

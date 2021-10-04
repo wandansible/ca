@@ -1,0 +1,70 @@
+---
+- name: Create ssl directory
+  ansible.builtin.file:
+    path: "{{ ownca_ssl_dir }}"
+    state: directory
+    owner: root
+    group: root
+    mode: u=rwx,g=rx,o=rx
+
+- name: Generate host private key
+  community.crypto.openssl_privatekey:
+    path: "{{ ownca_key_file }}"
+    type: "{{ ownca_key_type }}"
+    curve: "{{ ownca_key_curve if ownca_key_curve != '' else omit }}"
+    size: "{{ ownca_key_size if ownca_key_size != '' else omit }}"
+    owner: root
+    group: root
+    mode: u=rw,g=,o=
+    state: present
+    backup: yes
+
+- name: Generate host CSR
+  community.crypto.openssl_csr_pipe:
+    common_name: "{{ ownca_common_name }}"
+    subject_alt_name: "{{ ownca_san }}"
+    privatekey_path: "{{ ownca_key_file }}"
+  changed_when: false
+  register: _csr
+
+- name: Check for host certificate
+  ansible.builtin.stat:
+    path: "{{ ownca_cert_file }}"
+  register: _check_for_cert
+
+- block:
+    - name: Get host certificate content
+      ansible.builtin.slurp:
+        path: "{{ ownca_cert_file }}"
+      register: _cert_content
+
+    - name: Get host certificate information
+      community.crypto.x509_certificate_info:
+        path: "{{ ownca_cert_file }}"
+        valid_at:
+          future: "{{ ownca_early_renewal }}"
+      register: _cert_info
+  when: _check_for_cert.stat.exists
+
+- name: Generate host certificate
+  community.crypto.x509_certificate_pipe:
+    content: >-
+      {{ _cert_content.content | b64decode if 
+      _check_for_cert.stat.exists and
+      _cert_info.valid_at.future else omit }}
+    provider: ownca
+    ownca_content: "{{ ownca_ca_cert }}"
+    ownca_privatekey_content: "{{ ownca_ca_key }}"
+    ownca_not_after: "{{ ownca_not_after }}"
+    csr_content: "{{ _csr.csr }}"
+  connection: local
+  become: false
+  register: _cert
+
+- name: Copy host certificate to host
+  ansible.builtin.copy:
+    content: "{{ _cert.certificate }}"
+    dest: "{{ ownca_cert_file }}"
+    owner: root
+    group: root
+    mode: u=rw,g=r,o=r
