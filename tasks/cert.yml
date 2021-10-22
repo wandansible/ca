@@ -49,7 +49,7 @@
 - name: Generate host certificate
   community.crypto.x509_certificate_pipe:
     content: >-
-      {{ _cert_content.content | b64decode if 
+      {{ _cert_content.content | b64decode if
       _check_for_cert.stat.exists and
       _cert_info.valid_at.future else omit }}
     provider: ownca

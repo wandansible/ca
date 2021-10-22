@@ -9,7 +9,7 @@
 
 - name: Generate private key and host certificate
   ansible.builtin.import_tasks: cert.yml
-  when: 
+  when:
     - ownca_generate_cert | bool
     - ownca_ca_cert != ""
     - ownca_ca_key != ""
@@ -22,6 +22,6 @@
     group: root
     mode: u=rw,g=r,o=r
   notify: update-ca-certificates
-  when: 
+  when:
     - ownca_trust_ca | bool
     - ownca_ca_cert != ""
