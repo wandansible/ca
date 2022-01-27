@@ -26,6 +26,7 @@
     privatekey_path: "{{ ownca_key_file }}"
   changed_when: false
   register: _csr
+  check_mode: no
 
 - name: Check for host certificate
   ansible.builtin.stat:
