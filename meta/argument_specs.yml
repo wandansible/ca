@@ -1,0 +1,83 @@
+---
+argument_specs:
+  main:
+    short_description: Generate SSL certificate for a host from an internal CA
+    description: |
+      Generate SSL certificate and private key for a host which is signed by a locally-managed internal certificate authority (CA).
+      The CA certificate can be used for external software to validate a given host is trusted and managed by ansible,
+      or if ownca_trust_ca is set to true, then the CA certificate will be added to the host's trusted CA cert store.
+    options:
+      ownca_generate_cert:
+        description: If true, generate an SSL certificate for the host
+        type: bool
+        default: true
+
+      ownca_trust_ca:
+        description: If true, add CA certificate from ownca_ca_cert to the trusted CA cert store
+        type: bool
+        default: false
+
+      ownca_ssl_dir:
+        description: Directory where the generated SSL certs and keys are stored
+        type: str
+        default: /etc/ssl/ansible
+
+      ownca_cert_file:
+        description: Path for the generated SSL cert
+        type: str
+
+      ownca_key_file:
+        description: Path for the generated SSL key
+        type: str
+
+      ownca_ca_filename:
+        description: Filename (without extension) for the CA cert file added to the trusted CA cert store
+        type: str
+        default: wand-ca
+
+      ownca_key_type:
+        description: The algorithm used to generate the SSL key
+        type: str
+        default: ECC
+
+      ownca_key_curve:
+        description: When ownca_key_type = ECC, the curve used to generate the SSL key
+        type: str
+        default: secp256r1
+
+      ownca_key_size:
+        description: When ownca_key_type = RSA or DSA, size (in bits) of the generated SSL key
+        type: str
+
+      ownca_not_after:
+        description: |
+          The time, given as a relative time or ASN.1 timestamp,
+          that the generated certificate should not be valid after,
+          e.g. "+1825d" for 5 years from now
+        type: str
+        default: +1825d
+
+      ownca_early_renewal:
+        description: |
+          Renew the certificate if it is not vaild from the specified time
+          given as a relative time or ASN.1 timestamp,
+          e.g. "+365d" for 1 year from now
+        type: str
+        default: +365d
+
+      ownca_common_name:
+        description: Value for the commonName (CN) field in the generated SSL cert
+        type: str
+
+      ownca_san:
+        description: Subject Alternative Name (SAN) extensions added to the generated SSL cert
+        type: list
+        elements: str
+
+      ownca_ca_cert:
+        description: Contents of the CA certificate
+        type: str
+
+      ownca_ca_key:
+        description: Contents of the CA key
+        type: str
