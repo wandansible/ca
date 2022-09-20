@@ -1,6 +1,6 @@
 ---
 ownca_generate_cert: true
-ownca_trust_ca: true
+ownca_trust_ca: false
 
 ownca_ssl_dir: /etc/ssl/ansible
 ownca_cert_file: "{{ ownca_ssl_dir }}/{{ inventory_hostname }}.cert"
