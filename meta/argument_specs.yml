@@ -33,7 +33,7 @@ argument_specs:
       ownca_ca_filename:
         description: Filename (without extension) for the CA cert file added to the trusted CA cert store
         type: str
-        default: wand-ca
+        default: ansible-ca
 
       ownca_key_type:
         description: The algorithm used to generate the SSL key
