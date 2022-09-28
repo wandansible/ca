@@ -1,0 +1,26 @@
+---
+- name: Converge
+  hosts: all
+  tasks:
+    - name: "Include wandansible.ca"
+      ansible.builtin.include_role:
+        name: "wandansible.ca"
+      vars:
+        ownca_ca_key: |
+          -----BEGIN EC PRIVATE KEY-----
+          MHcCAQEEIFmrsg/feY6CTjDg8yH62xkwAwaLx5MzH9AtnarJoRDxoAoGCCqGSM49
+          AwEHoUQDQgAEK133///6bP49BQWGddK43BucUFnDcK84SjkueL5nFRtA7qzfYut4
+          m2oDCkQoiKoGGs0fFUoYpsCC0HXroy+B0A==
+          -----END EC PRIVATE KEY-----
+        ownca_ca_cert: |
+          -----BEGIN CERTIFICATE-----
+          MIIBfjCCASWgAwIBAgIUChUyl5juL4tN3AEew63tEFeGvBYwCgYIKoZIzj0EAwIw
+          FTETMBEGA1UEAwwKQW5zaWJsZSBDQTAeFw0yMjA5MjgwNDI5MzNaFw0zNzA5MjQw
+          NDI5MzNaMBUxEzARBgNVBAMMCkFuc2libGUgQ0EwWTATBgcqhkjOPQIBBggqhkjO
+          PQMBBwNCAAQrXff///ps/j0FBYZ10rjcG5xQWcNwrzhKOS54vmcVG0DurN9i63ib
+          agMKRCiIqgYazR8VShimwILQdeujL4HQo1MwUTAdBgNVHQ4EFgQUyHgLi+GfXd78
+          tEe1V48X9UWlNdwwHwYDVR0jBBgwFoAUyHgLi+GfXd78tEe1V48X9UWlNdwwDwYD
+          VR0TAQH/BAUwAwEB/zAKBggqhkjOPQQDAgNHADBEAiAJr2eRfFIZPg8afB6nbxzt
+          bexFX5LFVXp3w9iSZFApZAIgMjvvHU6xuMitPJLkEqUo2J1JNEmO/EVNl46j2BJ/
+          jU0=
+          -----END CERTIFICATE-----
